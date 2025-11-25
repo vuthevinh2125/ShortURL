@@ -12,8 +12,8 @@ env:
 
 jobs:
   build-and-test:
-    # Vẫn dùng Ubuntu để build nhanh hơn
-    runs-on: ubuntu-latest 
+    # 🔥 FIX: Chuyển sang Windows Runner để BỎ QUA LỖI PHÂN BIỆT CHỮ HOA/THƯỜNG
+    runs-on: windows-latest 
 
     steps:
     - name: Checkout code
@@ -31,6 +31,10 @@ jobs:
     - name: Build Project
       # Biên dịch toàn bộ Solution
       run: dotnet build ${{ env.SOLUTION_FILE }} --configuration Release --no-restore
+      
+    - name: Run Unit Tests
+      # Chạy kiểm thử
+      run: dotnet test ${{ env.SOLUTION_FILE }} --no-build --verbosity normal
       
     - name: Run Unit Tests
       # Chạy kiểm thử (sẽ khắc phục lỗi Fact/FactAttribute sau khi restore thành công)
