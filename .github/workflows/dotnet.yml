@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 env:
-  SOLUTION_FILE: TinyUrlWebApp.sln 
+  SOLUTION_FILE: TinyUrlWebApp.slnx
   DOTNET_VERSION: '8.0.x' 
 
 jobs:
