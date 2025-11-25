@@ -9,7 +9,7 @@ on:
 env:
   # Thiết lập tên file Solution của bạn để các bước sau sử dụng.
   # Hãy thay thế "TinyUrlWebApp.sln" nếu tên file của bạn khác.
-  SOLUTION_FILE: TinyUrlWebApp.sln 
+  SOLUTION_FILE: TinyUrlWebApp/TinyUrlWebApp.sln
   DOTNET_VERSION: '8.0.x' # Phiên bản .NET của bạn
 
 jobs:
