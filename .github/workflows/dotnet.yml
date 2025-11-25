@@ -1,4 +1,4 @@
-name: .NET CI Diagnosis
+name: .NET CI - TinyUrlWebApp Build & Test
 
 on:
   push:
@@ -7,32 +7,30 @@ on:
     branches: [ "main" ]
 
 env:
-  # Đường dẫn này đang bị lỗi, nhưng chúng ta sẽ giữ để kiểm tra sau.
   SOLUTION_FILE: TinyUrlWebApp/TinyUrlWebApp.sln 
   DOTNET_VERSION: '8.0.x' 
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
     
-    - name: List files for diagnosis
-      run: ls -R
-    # ----------------------------------------------------
-
-    - name: Setup .NET
+    - name: Setup .NET SDK
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
 
     - name: Restore dependencies
-      # Bước này có thể vẫn thất bại vì đường dẫn sai, nhưng chúng ta cần log ls -R.
+      # Khôi phục các gói NuGet bằng đường dẫn Solution chính xác
       run: dotnet restore ${{ env.SOLUTION_FILE }}
 
-    - name: Build
+    - name: Build Project
+      # Biên dịch toàn bộ Solution
       run: dotnet build ${{ env.SOLUTION_FILE }} --configuration Release --no-restore
       
-    - name: Test
+    - name: Run Unit Tests
+      # Chạy kiểm thử sau khi Build thành công
       run: dotnet test ${{ env.SOLUTION_FILE }} --no-build --verbosity normal
