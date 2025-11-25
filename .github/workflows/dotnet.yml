@@ -7,12 +7,13 @@ on:
     branches: [ "main" ]
 
 env:
-  # Giữ tên file Solution đã xác nhận
+  # Fix Lỗi Path/Extension: Sử dụng tên file đã được xác nhận trên GitHub
   SOLUTION_FILE: TinyUrlWebApp.slnx 
   DOTNET_VERSION: '8.0.x' 
 
 jobs:
   build-and-test:
+    # Fix Lỗi Case Sensitivity: Chuyển sang Windows Runner
     runs-on: windows-latest 
 
     steps:
@@ -25,13 +26,14 @@ jobs:
         dotnet-version: ${{ env.DOTNET_VERSION }}
 
     - name: Restore dependencies
-      # Vẫn chạy Restore đầu tiên
+      # Khôi phục gói NuGet
       run: dotnet restore ${{ env.SOLUTION_FILE }}
 
-    # 🔥 ĐÃ BỎ BƯỚC BUILD RIÊNG BIỆT (Vì nó gây lỗi CS0246)
-    # Chúng ta sẽ để cho lệnh dotnet test tự động build
-    
+    # 🔥 Fix Lỗi CS0246 (xUnit): Kết hợp Build và Test
     - name: Build and Run Unit Tests
+      # Lệnh này sẽ tự động Build (biên dịch) các dự án sau khi Restore, 
+      # và chạy kiểm thử (test), hoàn tất quy trình CI
+      run: dotnet test ${{ env.SOLUTION_FILE }} --configuration Release --verbosity normal
       # Thay thế bước Build và Test bằng lệnh dotnet test duy nhất.
       # Lệnh này sẽ tự động build dự án trước khi chạy test, và thường xử lý lỗi CS0246 tốt hơn.
       run: dotnet test ${{ env.SOLUTION_FILE }} --configuration Release --verbosity normal
