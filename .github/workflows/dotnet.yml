@@ -1,7 +1,4 @@
-# This workflow will build a .NET project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
-
-name: .NET
+name: .NET CI
 
 on:
   push:
@@ -9,20 +6,32 @@ on:
   pull_request:
     branches: [ "main" ]
 
+env:
+  # Thiết lập tên file Solution của bạn để các bước sau sử dụng.
+  # Hãy thay thế "TinyUrlWebApp.sln" nếu tên file của bạn khác.
+  SOLUTION_FILE: TinyUrlWebApp.sln 
+  DOTNET_VERSION: '8.0.x' # Phiên bản .NET của bạn
+
 jobs:
   build:
-
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest # Chuyển sang Ubuntu để tiết kiệm tài nguyên và thời gian build nhanh hơn
 
     steps:
     - uses: actions/checkout@v4
+    
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.0.x
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
     - name: Restore dependencies
-      run: dotnet restore
+      # Chỉ định rõ file Solution để khôi phục gói NuGet cho TẤT CẢ các dự án con
+      run: dotnet restore ${{ env.SOLUTION_FILE }}
+
     - name: Build
-      run: dotnet build --no-restore
+      # Biên dịch toàn bộ Solution
+      run: dotnet build ${{ env.SOLUTION_FILE }} --configuration Release --no-restore
+      
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      # Chạy kiểm thử cho toàn bộ Solution (Bỏ qua bước này nếu không muốn chạy test)
+      run: dotnet test ${{ env.SOLUTION_FILE }} --no-build --verbosity normal
