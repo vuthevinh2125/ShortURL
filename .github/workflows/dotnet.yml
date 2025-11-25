@@ -7,12 +7,12 @@ on:
     branches: [ "main" ]
 
 env:
-  SOLUTION_FILE: TinyUrlWebApp.slnx
+  # Giữ tên file Solution đã xác nhận
+  SOLUTION_FILE: TinyUrlWebApp.slnx 
   DOTNET_VERSION: '8.0.x' 
 
 jobs:
   build-and-test:
-    # 🔥 FIX: Chuyển sang Windows Runner để BỎ QUA LỖI PHÂN BIỆT CHỮ HOA/THƯỜNG
     runs-on: windows-latest 
 
     steps:
@@ -25,17 +25,13 @@ jobs:
         dotnet-version: ${{ env.DOTNET_VERSION }}
 
     - name: Restore dependencies
-      # Chạy lệnh restore với tên file Solution đã xác nhận
+      # Vẫn chạy Restore đầu tiên
       run: dotnet restore ${{ env.SOLUTION_FILE }}
 
-    - name: Build Project
-      # Biên dịch toàn bộ Solution
-      run: dotnet build ${{ env.SOLUTION_FILE }} --configuration Release --no-restore
-      
-    - name: Run Unit Tests
-      # Chạy kiểm thử
-      run: dotnet test ${{ env.SOLUTION_FILE }} --no-build --verbosity normal
-      
-    - name: Run Unit Tests
-      # Chạy kiểm thử (sẽ khắc phục lỗi Fact/FactAttribute sau khi restore thành công)
-      run: dotnet test ${{ env.SOLUTION_FILE }} --no-build --verbosity normal
+    # 🔥 ĐÃ BỎ BƯỚC BUILD RIÊNG BIỆT (Vì nó gây lỗi CS0246)
+    # Chúng ta sẽ để cho lệnh dotnet test tự động build
+    
+    - name: Build and Run Unit Tests
+      # Thay thế bước Build và Test bằng lệnh dotnet test duy nhất.
+      # Lệnh này sẽ tự động build dự án trước khi chạy test, và thường xử lý lỗi CS0246 tốt hơn.
+      run: dotnet test ${{ env.SOLUTION_FILE }} --configuration Release --verbosity normal
