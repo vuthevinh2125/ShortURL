@@ -34,6 +34,3 @@ jobs:
       # Lệnh này sẽ tự động Build (biên dịch) các dự án sau khi Restore, 
       # và chạy kiểm thử (test), hoàn tất quy trình CI
       run: dotnet test ${{ env.SOLUTION_FILE }} --configuration Release --verbosity normal
-      # Thay thế bước Build và Test bằng lệnh dotnet test duy nhất.
-      # Lệnh này sẽ tự động build dự án trước khi chạy test, và thường xử lý lỗi CS0246 tốt hơn.
-      run: dotnet test ${{ env.SOLUTION_FILE }} --configuration Release --verbosity normal
