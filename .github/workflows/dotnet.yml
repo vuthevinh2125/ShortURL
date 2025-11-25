@@ -7,12 +7,14 @@ on:
     branches: [ "main" ]
 
 env:
-  SOLUTION_FILE: ShortenUrl.sln
+  # 🔥 SỬA LỖI ĐƯỜNG DẪN CUỐI CÙNG: Dùng tên file Solution chính xác và không có thư mục con.
+  SOLUTION_FILE: TinyUrlWebApp.sln 
   DOTNET_VERSION: '8.0.x' 
 
 jobs:
   build-and-test:
-    runs-on: ubuntu-latest
+    # Vẫn dùng Ubuntu để build nhanh hơn
+    runs-on: ubuntu-latest 
 
     steps:
     - name: Checkout code
@@ -24,7 +26,7 @@ jobs:
         dotnet-version: ${{ env.DOTNET_VERSION }}
 
     - name: Restore dependencies
-      # Khôi phục các gói NuGet bằng đường dẫn Solution chính xác
+      # Chạy lệnh restore với tên file Solution đã xác nhận
       run: dotnet restore ${{ env.SOLUTION_FILE }}
 
     - name: Build Project
@@ -32,5 +34,5 @@ jobs:
       run: dotnet build ${{ env.SOLUTION_FILE }} --configuration Release --no-restore
       
     - name: Run Unit Tests
-      # Chạy kiểm thử sau khi Build thành công
+      # Chạy kiểm thử (sẽ khắc phục lỗi Fact/FactAttribute sau khi restore thành công)
       run: dotnet test ${{ env.SOLUTION_FILE }} --no-build --verbosity normal
