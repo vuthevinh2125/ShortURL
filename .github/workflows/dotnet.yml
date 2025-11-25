@@ -1,4 +1,4 @@
-name: .NET CI
+name: .NET CI Diagnosis
 
 on:
   push:
@@ -7,36 +7,32 @@ on:
     branches: [ "main" ]
 
 env:
-  # Thiết lập tên file Solution của bạn để các bước sau sử dụng.
-  # Hãy thay thế "TinyUrlWebApp.sln" nếu tên file của bạn khác.
-  SOLUTION_FILE: TinyUrlWebApp/TinyUrlWebApp.sln
-  DOTNET_VERSION: '8.0.x' # Phiên bản .NET của bạn
+  # Đường dẫn này đang bị lỗi, nhưng chúng ta sẽ giữ để kiểm tra sau.
+  SOLUTION_FILE: TinyUrlWebApp/TinyUrlWebApp.sln 
+  DOTNET_VERSION: '8.0.x' 
 
 jobs:
   build:
-    runs-on: ubuntu-latest # Chuyển sang Ubuntu để tiết kiệm tài nguyên và thời gian build nhanh hơn
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
     
+    - name: List files for diagnosis
+      run: ls -R
+    # ----------------------------------------------------
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
 
     - name: Restore dependencies
-      # Chỉ định rõ file Solution để khôi phục gói NuGet cho TẤT CẢ các dự án con
+      # Bước này có thể vẫn thất bại vì đường dẫn sai, nhưng chúng ta cần log ls -R.
       run: dotnet restore ${{ env.SOLUTION_FILE }}
 
     - name: Build
-      # Biên dịch toàn bộ Solution
       run: dotnet build ${{ env.SOLUTION_FILE }} --configuration Release --no-restore
       
     - name: Test
-      # Chạy kiểm thử cho toàn bộ Solution (Bỏ qua bước này nếu không muốn chạy test)
       run: dotnet test ${{ env.SOLUTION_FILE }} --no-build --verbosity normal
-
-
-      # Thêm đoạn code này vào file dotnet.yml của bạn:
-    - name: List files for diagnosis
-      run: ls -R
