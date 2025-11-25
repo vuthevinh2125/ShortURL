@@ -1,0 +1,50 @@
+﻿{
+  "Routes": [
+    // --------------------------------------------------------------------------------
+    // ROUTE 1: Service 2 - ShortenUrl API (CỦA BẠN)
+    // --------------------------------------------------------------------------------
+    {
+      "DownstreamPathTemplate": "/shorten/{url}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "shortenurl-api", // Tên service trong docker-compose.yml
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/shorten/{url}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
+    },
+    {
+      "DownstreamPathTemplate": "/shorten/history",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "shortenurl-api",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/shorten/history",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+
+    // --------------------------------------------------------------------------------
+    // ROUTE 2: Service 1/3 - User/Auth Service (CỦA BẠN BÈ)
+    // --------------------------------------------------------------------------------
+    {
+      "DownstreamPathTemplate": "/auth/{url}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "userservice-api", // Tên service trong docker-compose.yml
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/auth/{url}",
+      "UpstreamHttpMethod": [ "POST" ]
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "http://localhost:5000" // Cổng mà Gateway sẽ chạy trên host
+  }
+}

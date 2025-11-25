@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="Gateway/Gateway.csproj" Id="288b3d17-3a4a-48a9-a353-64536527ee6f" />
+  <Project Path="ShortenUrl.Tests/ShortenUrl.Tests.csproj" />
+  <Project Path="ShortenUrl/ShortenUrl.csproj" />
+</Solution>

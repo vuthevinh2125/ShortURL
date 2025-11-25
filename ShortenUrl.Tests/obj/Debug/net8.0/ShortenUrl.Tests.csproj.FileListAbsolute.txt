@@ -1,0 +1,6 @@
+D:\CODE Service 2\TinyUrlWebApp\ShortenUrl.Tests\bin\Debug\net8.0\.msCoverageSourceRootsMapping_ShortenUrl.Tests
+D:\CODE Service 2\TinyUrlWebApp\ShortenUrl.Tests\obj\Debug\net8.0\ShortenUrl.Tests.csproj.AssemblyReference.cache
+D:\CODE Service 2\TinyUrlWebApp\ShortenUrl.Tests\obj\Debug\net8.0\ShortenUrl.Tests.GeneratedMSBuildEditorConfig.editorconfig
+D:\CODE Service 2\TinyUrlWebApp\ShortenUrl.Tests\obj\Debug\net8.0\ShortenUrl.Tests.AssemblyInfoInputs.cache
+D:\CODE Service 2\TinyUrlWebApp\ShortenUrl.Tests\obj\Debug\net8.0\ShortenUrl.Tests.AssemblyInfo.cs
+D:\CODE Service 2\TinyUrlWebApp\ShortenUrl.Tests\obj\Debug\net8.0\ShortenUrl.Tests.csproj.CoreCompileInputs.cache

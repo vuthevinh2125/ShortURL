@@ -1,0 +1,60 @@
+﻿version: '3.8'
+
+services:
+  # 1. Database (Sử dụng MSSQL Container cho môi trường Docker)
+  # NOTE: Cần sử dụng một MSSQL container hoặc Postgres, vì LocalDB không hoạt động trong Docker
+  # Giả định dùng PostgreSQL/Postgres-db cho dễ triển khai CI/CD
+  postgres-db:
+    image: postgres:14-alpine
+    environment:
+      POSTGRES_USER: dbuser
+      POSTGRES_PASSWORD: dbpassword
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dbuser"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+  
+  # 2. Service 2: ShortenUrl API (CỦA BẠN)
+  shortenurl-api:
+    image: vinhvu2010/shorten_url:latest # Sử dụng image bạn vừa push
+    build:
+      context: .
+      dockerfile: ShortenUrl/Dockerfile
+    environment:
+      # Thay đổi Connection String để trỏ đến service DB (postgres-db)
+      ConnectionStrings__ShortenerDbConnection: "Host=postgres-db;Port=5432;Database=shortener_db;Username=dbuser;Password=dbpassword;"
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+    ports:
+      - "8081:80" # Cho kiểm thử trực tiếp
+    restart: unless-stopped
+    
+  # 3. Service 3: User Service (CỦA NGƯỜI KHÁC)
+  userservice-api:
+    image: ducknolife/userservice:latest # Image từ Docker Hub
+    # NOTE: Cần có file .env hoặc environment variables cho connection string DB của nó
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+    restart: unless-stopped
+    
+  # 4. API Gateway (Ví dụ Ocelot)
+  api-gateway:
+    build:
+      context: .
+      dockerfile: Gateway/Dockerfile
+    depends_on:
+      - shortenurl-api
+      - userservice-api
+    ports:
+      - "5000:80" # Cổng host:5000 sẽ trỏ đến Gateway
+    restart: unless-stopped
+
+# Định nghĩa Volumes
+volumes:
+  postgres_data: {}
